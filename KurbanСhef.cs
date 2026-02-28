@@ -31,7 +31,7 @@ namespace KurbanChef
 
                 if (choice == "1") { ShowMenuAndOrder(allPizzas); }
                 else if (choice == "2") { CreateCustomPizza(allIngredients, allBases, allPizzas); }
-                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases); }
+                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas); }
                 else if (choice == "5") break;
             }
         }
