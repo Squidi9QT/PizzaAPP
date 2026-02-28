@@ -100,7 +100,6 @@ namespace KurbanChef
                     customPizza.AddIngredient(ingredients[ingIdx - 1]);
             }
 
-            // Добавляем выбор размера и бортика в конструктор
             Console.WriteLine("\nРазмер: 1.Small 2.Medium(+20%) 3.Large(+50%)");
             string sz = Console.ReadLine()!;
             customPizza.Size = sz == "2" ? PizzaSize.Medium : (sz == "3" ? PizzaSize.Large : PizzaSize.Small);
