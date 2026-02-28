@@ -29,7 +29,7 @@ namespace KurbanChef
                             Console.WriteLine("Ингредиенты");
                             foreach (var i in ingredients)
                             {
-                                Console.WriteLine($"{i.Name}: {i.Price} руб.");
+                                Console.WriteLine($"{i.Name}: {i.Price} тенге.");
                             }
                             break;
                         }
@@ -50,7 +50,7 @@ namespace KurbanChef
                             Console.WriteLine("Основы");
                             foreach (var b in bases)
                             {
-                                Console.WriteLine($"{(b.IsClassic ? "[К]" : "[О]")} {b.Name}: {b.Price} руб.");
+                                Console.WriteLine($"{(b.IsClassic ? "[К]" : "[О]")} {b.Name}: {b.Price} тенге.");
                             }
                             break;
                         }

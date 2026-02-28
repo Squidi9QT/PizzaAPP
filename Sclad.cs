@@ -21,9 +21,9 @@ namespace KurbanChef
             pepperoni.AddIngredient(ingredients[1]);
             pizzas.Add(pepperoni);
 
-            Pizza margarita = new Pizza("Маргарита", bases[1]);
-            pepperoni.AddIngredient(ingredients[0]);
-            pepperoni.AddIngredient(ingredients[4]);
+            Pizza margarita = new Pizza("Маргарита", bases[0]);
+            margarita.AddIngredient(ingredients[0]);
+            margarita.AddIngredient(ingredients[4]);
             pizzas.Add(margarita);
         }
     }
