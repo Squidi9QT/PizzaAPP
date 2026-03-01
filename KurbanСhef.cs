@@ -28,7 +28,8 @@ namespace KurbanChef
                 Console.WriteLine("==============================================================");
                 Console.WriteLine("1. ПОСМОТРЕТЬ МЕНЮ И ЗАКАЗАТЬ");
                 Console.WriteLine("2. СОБРАТЬ СВОЮ ПИЦЦУ (КОНСТРУКТОР)");
-                Console.WriteLine($"3. КОРЗИНА И ОФОРМЛЕНИЕ ЗАКАЗА (Пицц: {currentOrder.Pizzas.Count})");
+                Console.WriteLine("3. ПИЦЦА 50/50)");
+                Console.WriteLine($"4. КОРЗИНА И ОФОРМЛЕНИЕ ЗАКАЗА (Пицц: {currentOrder.Pizzas.Count})");
                 Console.WriteLine("0. ПАНЕЛЬ АДМИНИСТРАТОРА");
                 Console.WriteLine("5. ВЫХОД");
                 Console.WriteLine("==========================================");
@@ -38,7 +39,8 @@ namespace KurbanChef
 
                 if (choice == "1") { ShowMenuAndOrder(allPizzas, allCrusts, currentOrder); }
                 else if (choice == "2") { CreateCustomPizza(allIngredients, allBases, allCrusts, currentOrder); }
-                else if (choice == "3")
+                else if (choice == "3") { CreateComboPizza(allPizzas, allBases, allCrusts, currentOrder); }
+                else if (choice == "4")
                 {
                     if (Checkout(ref currentOrder, allOrders))
                     {
@@ -236,6 +238,31 @@ namespace KurbanChef
             return true;
         }
 
+        static void CreateComboPizza(List<Pizza> menu, List<PizzaBase> bases, List<Crust> crusts, Order currentOrder)
+        {
+            Console.Clear();
+            Console.WriteLine("=== СБОРКА ПИЦЦЫ 50/50 ===");
+            for (int i = 0; i < menu.Count; i++) Console.WriteLine($"{i + 1}. {menu[i].Name}");
 
+            Console.Write("\nПервая половина (номер): "); int p1 = int.Parse(Console.ReadLine()!) - 1;
+            Console.Write("Вторая половина (номер): "); int p2 = int.Parse(Console.ReadLine()!) - 1;
+            Console.Write("Основа (1-Классика, 2-Тонкое, 3-Толстое): "); int bIdx = int.Parse(Console.ReadLine()!) - 1;
+
+            Pizza combo = new Pizza($"50/50: {menu[p1].Name} / {menu[p2].Name}", bases[bIdx]);
+
+            menu[p1].Ingredients.ForEach(i => combo.AddIngredient(new Ingredient(i.Name + " 1/2", i.Price / 2m)));
+            menu[p2].Ingredients.ForEach(i => combo.AddIngredient(new Ingredient(i.Name + " 1/2", i.Price / 2m)));
+
+            Console.Write("Размер (1-S, 2-M, 3-L): "); string sz = Console.ReadLine()!;
+            combo.Size = sz == "2" ? PizzaSize.Medium : (sz == "3" ? PizzaSize.Large : PizzaSize.Small);
+
+            Console.Write("Бортик (1-Сырный, 2-Кунжут, 0-Без): ");
+            int.TryParse(Console.ReadLine(), out int cChoice);
+            combo.SelectedCrust = cChoice > 0 ? crusts[cChoice - 1] : null;
+
+            currentOrder.AddPizza(combo);
+            Console.WriteLine($"Готово! Итог: {combo.TotalPrice} тг. Нажмите любую кнопку...");
+            Console.ReadKey();
+        }
     }
 }
