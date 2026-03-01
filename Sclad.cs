@@ -39,6 +39,25 @@ namespace KurbanChef
             margarita.AddIngredient(ingredients[0]);
             margarita.AddIngredient(ingredients[4]);
             pizzas.Add(margarita);
+
+            Pizza mushroom = new Pizza("Грибная", bases[1]);
+            mushroom.AddIngredient(ingredients[0]);
+            mushroom.AddIngredient(ingredients[2]);
+            pizzas.Add(mushroom);
+
+            Pizza meat = new Pizza("Мясная", bases[2]);
+            meat.AddIngredient(ingredients[0]);
+            meat.AddIngredient(ingredients[1]);
+            meat.AddIngredient(ingredients[3]);
+            pizzas.Add(meat);
+
+            Pizza mix = new Pizza("Студенческий Микс", bases[0]);
+            mix.AddIngredient(ingredients[0]);
+            mix.AddIngredient(ingredients[2]);
+            mix.AddIngredient(ingredients[3]);
+            mix.AddIngredient(ingredients[4]);
+            pizzas.Add(mix);
+
         }
     }
 }
