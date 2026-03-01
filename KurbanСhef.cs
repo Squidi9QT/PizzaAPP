@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,8 @@ namespace KurbanChef
             List<PizzaBase> allBases = new List<PizzaBase>();
             List<Pizza> allPizzas = new List<Pizza>();
 
-            Sclad.SeedData(allIngredients, allBases, allPizzas);
+            List<Crust> allCrusts = new List<Crust>();
+            Sclad.SeedData(allIngredients, allBases, allPizzas, allCrusts);
 
             while (true)
             {
@@ -29,14 +31,14 @@ namespace KurbanChef
 
                 string choice = Console.ReadLine()!;
 
-                if (choice == "1") { ShowMenuAndOrder(allPizzas); }
-                else if (choice == "2") { CreateCustomPizza(allIngredients, allBases, allPizzas); }
+                if (choice == "1") { ShowMenuAndOrder(allPizzas, allCrusts); }
+                else if (choice == "2") { CreateCustomPizza(allIngredients, allBases, allPizzas, allCrusts); }
                 else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas); }
                 else if (choice == "5") break;
             }
         }
 
-        static void ShowMenuAndOrder(List<Pizza> pizzas)
+        static void ShowMenuAndOrder(List<Pizza> pizzas, List<Crust> crusts)
         {
             Console.Clear();
             Console.WriteLine("\n--- НАШЕ ФИРМЕННОЕ МЕНЮ ---");
@@ -58,20 +60,47 @@ namespace KurbanChef
                 string sChoice = Console.ReadLine()!;
                 selected.Size = sChoice == "2" ? PizzaSize.Medium : (sChoice == "3" ? PizzaSize.Large : PizzaSize.Small);
 
-                Console.Write("Добавить сырный бортик? (+500 тенге) (да/нет):");
-                selected.HasCheeseCrust = Console.ReadLine()?.ToLower() == "да";
+
+                Console.WriteLine("\nВыберите бортик:");
+                Console.WriteLine("0. Без бортика");
+                for (int j = 0; j < crusts.Count; j++)
+                {
+                    if (crusts[j].ForbiddenPizzas.Contains(selected.Name))
+                        Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тенге) - НЕДОСТУПНО");
+                    else
+                        Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тенге)");
+                }
+
+                Console.Write("Ваш выбор: ");
+                if (int.TryParse(Console.ReadLine(), out int cChoice) && cChoice > 0 && cChoice <= crusts.Count)
+                {
+                    var chosenCrust = crusts[cChoice - 1];
+                    if (!chosenCrust.ForbiddenPizzas.Contains(selected.Name))
+                    {
+                        selected.SelectedCrust = chosenCrust;
+                    }
+                    else
+                    {
+                        Console.WriteLine("ШефКурбан старался!! а ты портишь ее своими бортиками, НЕЛЬЗЯ!");
+                        selected.SelectedCrust = null;
+                    }
+                }
+
 
                 Console.Clear();
                 Console.WriteLine("========== ЧЕК ==========");
                 Console.WriteLine($"Заказ: {selected.Size} пицца '{selected.Name}'");
-                if (selected.HasCheeseCrust) Console.WriteLine("Доп: Сырный бортик");
+                if (selected.SelectedCrust != null)
+                {
+                    Console.WriteLine($"Доп: {selected.SelectedCrust.Name}");
+                }
                 Console.WriteLine($"ИТОГО: {selected.TotalPrice} тенге.");
                 Console.WriteLine("=========================");
                 Console.ReadKey();
             }
         }
 
-       static void CreateCustomPizza(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas)
+       static void CreateCustomPizza(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas, List<Crust> crusts)
 {
     Console.Clear();
     Console.WriteLine("=== КОНСТРУКТОР ПИЦЦЫ ===");
@@ -104,11 +133,29 @@ namespace KurbanChef
             string sz = Console.ReadLine()!;
             customPizza.Size = sz == "2" ? PizzaSize.Medium : (sz == "3" ? PizzaSize.Large : PizzaSize.Small);
 
-            Console.Write("Сырный бортик? (+500 тенге) (да/нет): ");
-            customPizza.HasCheeseCrust = Console.ReadLine()?.ToLower() == "да";
+            Console.WriteLine("\nВыберите бортик:");
+            Console.WriteLine("0. Без бортика");
+            for (int j = 0; j < crusts.Count; j++)
+            {
+                Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тг)");
+            }
+            Console.Write("Ваш выбор: ");
+            if (int.TryParse(Console.ReadLine(), out int cChoice) && cChoice > 0 && cChoice <= crusts.Count)
+            {
+                customPizza.SelectedCrust = crusts[cChoice - 1];
+            }
+            else
+            {
+                customPizza.SelectedCrust = null;
+            }
 
             pizzas.Add(customPizza);
-            Console.WriteLine($"\nГотово! Цена: {customPizza.TotalPrice} тенге. Нажмите любую клавишу...");
+
+            Console.Clear();
+            string crustName = customPizza.SelectedCrust != null ? customPizza.SelectedCrust.Name : "Без бортика";
+            Console.WriteLine($"\nГотово! Ваша пицца '{customPizza.Name}' собрана.");
+            Console.WriteLine($"Размер: {customPizza.Size}, Бортик: {crustName}");
+            Console.WriteLine($"Итоговая цена: {customPizza.TotalPrice} тенге. Нажмите любую клавишу...");
             Console.ReadKey();
         }
     }

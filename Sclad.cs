@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Net.Security;
 
 namespace KurbanChef
 {
     public static class Sclad
     {
-        public static void SeedData(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas)
+        public static void SeedData(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas,List<Crust> crusts)
         {
             bases.Add(new PizzaBase("Классическое", 1000, true));
             bases.Add(new PizzaBase("Тонкое", 1100, false, 1000));
@@ -15,6 +16,19 @@ namespace KurbanChef
             ingredients.Add(new Ingredient("Шампиньоны", 400));
             ingredients.Add(new Ingredient("Ветчина(Халал)", 1200));
             ingredients.Add(new Ingredient("Томаты", 300));
+            ingredients.Add(new Ingredient("Кунжут", 200));
+
+
+            Crust cheeseCrust = new Crust("Сырные бортики");
+            cheeseCrust.AddIngredient(ingredients[0]);
+
+            cheeseCrust.ForbiddenPizzas.Add("Маргарита");
+            crusts.Add(cheeseCrust);
+
+            Crust sesameCrust = new Crust("Кунжутные бортики");
+            sesameCrust.AddIngredient(ingredients[5]);
+            crusts.Add(sesameCrust);
+
 
             Pizza pepperoni = new Pizza("Пепперони", bases[1]);
             pepperoni.AddIngredient(ingredients[0]);
