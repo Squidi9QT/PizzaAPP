@@ -6,7 +6,7 @@ namespace KurbanChef
 {
     public static class Admin
     {
-        public static void ShowAdminMenu(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas)
+        public static void ShowAdminMenu(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas, List<Order> orders)
         {
             while (true)
             {
@@ -15,6 +15,7 @@ namespace KurbanChef
                 Console.WriteLine("1. Управление Ингредиентами");
                 Console.WriteLine("2. Управление Основами");
                 Console.WriteLine("3. Управление Пиццами (Меню)");
+                Console.WriteLine("4. ИСТОРИЯ ЗАКАЗОВ (и фильтры)");
                 Console.WriteLine("0. Назад в главное меню");
                 Console.WriteLine("=====================================================");
                 Console.Write("Выбор: ");
@@ -27,6 +28,7 @@ namespace KurbanChef
                     case "1": ManageIngredients(ingredients); break;
                     case "2": ManageBases(bases); break;
                     case "3": ManagePizzas(pizzas, bases, ingredients); break;
+                    case "4": ManageOrders(orders); break;
                 }
             }
         }
@@ -163,7 +165,7 @@ namespace KurbanChef
 
                 Console.WriteLine("\nВыберите основу:");
                 for (int i = 0; i < bases.Count; i++) Console.WriteLine($"{i + 1}. {bases[i].Name}");
-                
+
                 int baseIdx;
                 Console.Write("Ваш выбор: ");
                 while (!int.TryParse(Console.ReadLine(), out baseIdx) || baseIdx < 1 || baseIdx > bases.Count)
@@ -179,7 +181,7 @@ namespace KurbanChef
                 {
                     for (int i = 0; i < ingredients.Count; i++) Console.WriteLine($"{i + 1}. {ingredients[i].Name}");
                     Console.Write("Выбор: ");
-                    
+
                     if (!int.TryParse(Console.ReadLine(), out int ingIdx))
                     {
                         Console.WriteLine("Ошибка ввода! Пожалуйста, введите число.");
@@ -187,7 +189,7 @@ namespace KurbanChef
                     }
 
                     if (ingIdx == 0) break;
-                    
+
                     if (ingIdx > 0 && ingIdx <= ingredients.Count)
                     {
                         newPizza.AddIngredient(ingredients[ingIdx - 1]);
@@ -211,6 +213,64 @@ namespace KurbanChef
                 }
             }
             if (act != "0") Console.ReadKey();
+        }
+
+        private static void ManageOrders(List<Order> orders)
+        {
+            Console.Clear();
+            Console.WriteLine("--- ИСТОРИЯ ЗАКАЗОВ ---");
+            Console.WriteLine("1. Показать все заказы");
+            Console.WriteLine("2. Отфильтровать по дате");
+            Console.WriteLine("3. Отфильтровать по минимальной сумме");
+            Console.WriteLine("0. Назад");
+            Console.Write("Ваш выбор: ");
+            string choice = Console.ReadLine()!;
+
+            IEnumerable<Order> filteredOrders = orders;
+
+            if (choice == "2")
+            {
+                Console.Write("Введите дату (ДД.ММ.ГГГГ): ");
+                if (DateTime.TryParse(Console.ReadLine(), out DateTime dt))
+                {
+                    filteredOrders = orders.Where(o => o.OrderTime.Date == dt.Date);
+                }
+                else
+                {
+                    Console.WriteLine("Неверный формат даты.");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+            else if (choice == "3")
+            {
+                Console.Write("Введите минимальную сумму: ");
+                if (decimal.TryParse(Console.ReadLine(), out decimal minPrice))
+                {
+                    filteredOrders = orders.Where(o => o.TotalPrice >= minPrice);
+                }
+            }
+            else if (choice != "1") return;
+
+            Console.Clear();
+            Console.WriteLine("=== СПИСОК ЗАКАЗОВ ===");
+            if (!filteredOrders.Any())
+            {
+                Console.WriteLine("\nЗаказы по вашему запросу не найдены.");
+            }
+            else
+            {
+                foreach (var order in filteredOrders)
+                {
+                    Console.WriteLine($"\nЗаказ #{order.OrderNumber} (Оформлен на: {order.OrderTime})");
+                    Console.WriteLine($"Пицц: {order.Pizzas.Count} шт. | ИТОГ: {order.TotalPrice} тенге.");
+                    if (!string.IsNullOrEmpty(order.Comment))
+                        Console.WriteLine($"Комментарий: {order.Comment}");
+                    Console.WriteLine("-------------------------------------------------");
+                }
+            }
+            Console.WriteLine("\nНажмите любую клавишу для возврата...");
+            Console.ReadKey();
         }
     }
 }

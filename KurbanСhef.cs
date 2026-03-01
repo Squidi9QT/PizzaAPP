@@ -46,7 +46,7 @@ namespace KurbanChef
                         currentOrder = new Order(nextOrderNumber);
                     }
                 }
-                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas); }
+                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas, allOrders); }
                 else if (choice == "5") break;
             }
         }
@@ -204,6 +204,13 @@ namespace KurbanChef
             }
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine($"ИТОГО К ОПЛАТЕ: {currentOrder.TotalPrice} тенге.");
+
+            Console.WriteLine("\n[Enter] Продолжить оформление | [0] Назад в меню");
+            Console.Write("Ваш выбор: ");
+            if (Console.ReadLine() == "0")
+            {
+                return false;
+            }
 
             Console.Write("\nВведите комментарий к заказу (или нажмите Enter, чтобы пропустить): ");
             currentOrder.Comment = Console.ReadLine()!;
