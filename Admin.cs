@@ -148,6 +148,9 @@ namespace KurbanChef
         {
             Console.Clear();
             Console.WriteLine("--- ФИРМЕННЫЕ ПИЦЦЫ (МЕНЮ) ---");
+
+            var sortedPizzas = pizzas.OrderBy(p => p.TotalPrice).ToList(); // TODO LING
+
             for (int i = 0; i < pizzas.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {pizzas[i].Name} (Основа: {pizzas[i].Base.Name})");
@@ -296,7 +299,8 @@ namespace KurbanChef
             {
                 foreach (var order in filteredOrders)
                 {
-                    Console.WriteLine($"\nЗаказ #{order.OrderNumber} (Оформлен на: {order.OrderTime})");
+                    Console.WriteLine($"\nЗаказ #{order.OrderNumber} | ID: {order.Id}");
+                    Console.WriteLine($"Оформлен на: {order.OrderTime}");
                     Console.WriteLine($"Пицц: {order.Pizzas.Count} шт. | ИТОГ: {order.TotalPrice} тенге.");
                     if (!string.IsNullOrEmpty(order.Comment))
                         Console.WriteLine($"Комментарий: {order.Comment}");

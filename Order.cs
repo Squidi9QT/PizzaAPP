@@ -6,6 +6,7 @@ namespace KurbanChef
 {
     public class Order
     {
+        public Guid Id { get; private set;} = Guid.NewGuid();
         public int OrderNumber{get; set;}
         public List<Pizza> Pizzas {get; set;} = new List<Pizza>();
         public string Comment {get; set;} = "";
