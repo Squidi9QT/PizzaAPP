@@ -218,19 +218,34 @@ namespace KurbanChef
             currentOrder.Comment = Console.ReadLine()!;
 
             Console.Write("Сделать заказ отложенным? (да/нет): ");
-            if (Console.ReadLine()?.ToLower() == "да")
+            string isDelayed = Console.ReadLine()?.ToLower().Trim() ?? "";
+
+            if (isDelayed == "да")
             {
-                Console.Write("Введите дату и время (например, 00.00.0000 00:00): ");
-                if (DateTime.TryParse(Console.ReadLine(), out DateTime dt))
-                {
-                    currentOrder.OrderTime = dt;
-                    Console.WriteLine("Время заказа успешно установлено!");
+                bool validDate = false;
+                while (!validDate)
+                    {
+                        Console.Write("Введите дату и время (например, 09.02.2007 17:30): ");
+                        string dateInput = Console.ReadLine()!;
+
+                        if (DateTime.TryParse(dateInput, out DateTime dt))
+                        {
+                            currentOrder.OrderTime = dt;
+                            Console.WriteLine("Время заказа успешно установлено на: " + dt.ToString("g"));
+                            validDate = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("ОШИБКА: Неверный формат времени!");
+                        }
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Неверный формат времени! Будет использовано текущее время.");
+                    currentOrder.OrderTime = DateTime.Now;
                 }
-            }
+
+
 
             allOrders.Add(currentOrder);
             Console.WriteLine($"\nЗАКАЗ УСПЕШНО ОФОРМЛЕН! Ожидайте к {currentOrder.OrderTime}");
