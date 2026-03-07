@@ -1,13 +1,11 @@
 namespace KurbanChef
 {
-    public class Ingredient
+    public class Ingredient : BaseProduct //!!!!!
     {
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-
-        public Ingredient(string name, decimal price)
+        private decimal _price;
+        public override decimal Price => _price; //!!!!!
+        public Ingredient (string name, decimal price) : base(name)
         {
-            Name = name;
             Price = price;
         }
     }

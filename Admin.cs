@@ -79,7 +79,6 @@ namespace KurbanChef
             }
             if (act != "0") Console.ReadKey();
         }
-
         private static void ManageBases(List<PizzaBase> bases)
         {
             Console.Clear();
@@ -145,7 +144,6 @@ namespace KurbanChef
             }
             if (act != "0") Console.ReadKey();
         }
-
         private static void ManagePizzas(List<Pizza> pizzas, List<PizzaBase> bases, List<Ingredient> ingredients)
         {
             Console.Clear();
@@ -155,7 +153,7 @@ namespace KurbanChef
                 Console.WriteLine($"{i + 1}. {pizzas[i].Name} (Основа: {pizzas[i].Base.Name})");
             }
 
-            Console.WriteLine("\n[A] Добавить новую | [D] Удалить | [0] Назад");
+            Console.WriteLine("\n[A] Добавить новую | [D] Удалить | [F] Фильтр | [0] Назад");
             string act = Console.ReadLine()?.ToUpper()!;
 
             if (act == "A")
@@ -212,9 +210,45 @@ namespace KurbanChef
                     Console.WriteLine("Удалено!");
                 }
             }
+           else if (act == "F")
+            {
+                Console.Write("\nВведите название ингредиента для поиска (например, Томаты): ");
+                string search = Console.ReadLine()?.Trim().ToLower() ?? "";
+
+                //  TODO LINQ для поиска пиц с ингр
+                var filtered = pizzas.Where(p => p.Ingredients.Any(ing => ing.Name.ToLower().Contains(search))).ToList();
+
+                Console.WriteLine($"\n--- Результаты поиска для '{search}' ---");
+                if (filtered.Count == 0)
+                {
+                    Console.WriteLine("Пиццы с таким ингредиентом не найдены.");
+                }
+                else
+                {
+                    foreach (var p in filtered)
+                    {
+                        string composition = string.Join(", ", p.Ingredients.Select(x => x.Name));
+                        Console.WriteLine($"- {p.Name} | Состав: {composition}");
+                    }
+                }
+            }
+
             if (act != "0") Console.ReadKey();
         }
+        private static void FilterPizzasByIngredient(List<Pizza> pizzas)
+        {
+            Console.Write("Введите название ингредиента для поиска: ");
+            string search = Console.ReadLine()?.ToLower() ?? "";
 
+            var filtered = pizzas.Where(p => p.Ingredients.Any(i => i.Name.ToLower().Contains(search))).ToList();
+
+            Console.WriteLine($"\n--- Найдено пицц с '{search}': {filtered.Count} ---");
+            foreach (var p in filtered)
+            {
+                Console.WriteLine($"- {p.Name} (Состав: {string.Join(", ", p.Ingredients.Select(i => i.Name))})");
+            }
+            Console.ReadKey();
+        }
         private static void ManageOrders(List<Order> orders)
         {
             Console.Clear();

@@ -1,20 +1,19 @@
 namespace KurbanChef
 {
-    public class PizzaBase
+    public class PizzaBase : BaseProduct
     {
-        public string Name {get; set;}
-        public decimal Price { get; set; }
         public bool IsClassic { get; set; }
+        private decimal _basePrice;
 
-        public PizzaBase(string name, decimal price, bool isClassic, decimal classicPrice = 0)
+        public override decimal Price => _basePrice;
+
+        public PizzaBase(string name, decimal price, bool isClassic, decimal classicPrice = 0) : base(name)
         {
-            Name = name;
             IsClassic = isClassic;
-
-            if (!IsClassic && price > classicPrice * 1.2m)
+            // тут инкапусляция
+            if (!isClassic && classicPrice > 0 && price > classicPrice * 1.2m)
             {
-                Price = classicPrice * 1.2m;
-                Console.WriteLine($"Внимание: цена '{name}' была снижена до {Price}");
+                _basePrice = classicPrice * 1.2m;
             }
             else
             {

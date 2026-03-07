@@ -17,7 +17,7 @@ namespace KurbanChef
             ingredients.Add(new Ingredient("Ветчина(Халал)", 1200));
             ingredients.Add(new Ingredient("Томаты", 300));
             ingredients.Add(new Ingredient("Кунжут", 200));
-
+            ingredients.Add(new Ingredient("Какашка(От Ромы Сандаля)", 1488));
 
             Crust cheeseCrust = new Crust("Сырные бортики");
             cheeseCrust.AddIngredient(ingredients[0]);
