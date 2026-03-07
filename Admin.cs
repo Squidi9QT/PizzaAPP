@@ -42,7 +42,7 @@ namespace KurbanChef
                 Console.WriteLine($"{i + 1}. {ingredients[i].Name}: {ingredients[i].Price} тенге.");
             }
 
-            Console.WriteLine("\n[A] Добавить | [E] Редактировать | [D] Удалить | [0] Назад");
+            Console.WriteLine("\n[A] Добавить | [E] Редактировать | [D] Удалить | [F] Поиск | [0] Назад");
             string act = Console.ReadLine()?.ToUpper()!;
 
             if (act == "A")
@@ -77,6 +77,18 @@ namespace KurbanChef
                     Console.WriteLine("Удалено!");
                 }
             }
+            if (act == "F")
+            {
+                Console.Write("Введите название для поиска: ");
+                string search = Console.ReadLine()?.ToLower() ?? "";
+
+                // LINQ TODO
+                var found = ingredients.Where(ing => ing.Name.ToLower().Contains(search)).ToList();
+
+                Console.WriteLine($"\n--- Найдено: {found.Count} ---");
+                foreach (var f in found) Console.WriteLine($"- {f.Name}: {f.Price} тг.");
+                Console.ReadKey();
+            }
             if (act != "0") Console.ReadKey();
         }
         private static void ManageBases(List<PizzaBase> bases)
@@ -93,7 +105,7 @@ namespace KurbanChef
                 Console.WriteLine($"{i + 1}. {type} {bases[i].Name}: {bases[i].Price} тенге.");
             }
 
-            Console.WriteLine("\n[A] Добавить | [E] Редактировать | [D] Удалить | [0] Назад");
+            Console.WriteLine("\n[A] Добавить | [E] Редактировать | [D] Удалить | [F] Поиск | [0] Назад");
             string act = Console.ReadLine()?.ToUpper()!;
 
             if (act == "A")
@@ -141,6 +153,21 @@ namespace KurbanChef
                     bases.RemoveAt(idx - 1);
                     Console.WriteLine("Удалено!");
                 }
+            }
+            if (act == "F")
+            {
+                Console.Write("Введите название основы для поиска: ");
+                string search = Console.ReadLine()?.ToLower() ?? "";
+
+                var found = bases.Where(b => b.Name.ToLower().Contains(search)).ToList();
+
+                Console.WriteLine($"\n--- Найдено основ: {found.Count} ---");
+                foreach (var b in found)
+                {
+                    string type = b.IsClassic ? "[КЛАССИКА]" : "[ОСОБАЯ]";
+                    Console.WriteLine($"- {type} {b.Name}: {b.Price} тг.");
+                }
+                Console.ReadKey();
             }
             if (act != "0") Console.ReadKey();
         }
