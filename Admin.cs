@@ -178,12 +178,12 @@ namespace KurbanChef
 
             var sortedPizzas = pizzas.OrderBy(p => p.TotalPrice).ToList(); // TODO LING
 
-            for (int i = 0; i < pizzas.Count; i++)
+            for (int i = 0; i < sortedPizzas.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {pizzas[i].Name} (Основа: {pizzas[i].Base.Name})");
+               Console.WriteLine($"{i + 1}. {sortedPizzas[i].Name} (Основа: {sortedPizzas[i].Base.Name}) - {sortedPizzas[i].TotalPrice} тг.");
             }
 
-            Console.WriteLine("\n[A] Добавить новую | [D] Удалить | [F] Фильтр | [0] Назад");
+            Console.WriteLine("\n[A] Добавить новую | [E] Редактировать | [D] Удалить | [F] Фильтр | [0] Назад");
             string act = Console.ReadLine()?.ToUpper()!;
 
             if (act == "A")
@@ -231,16 +231,63 @@ namespace KurbanChef
                 pizzas.Add(newPizza);
                 Console.WriteLine("Пицца успешно добавлена в меню!");
             }
+
+            else if (act == "E")
+            {
+                Console.Write("Введите номер пиццы для редактирования: ");
+                if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= sortedPizzas.Count)
+                {
+                    var pizzaToEdit = sortedPizzas[idx - 1];
+
+                    Console.Write($"Новое название (Текущее: {pizzaToEdit.Name}): ");
+                    string newName = Console.ReadLine()!;
+                    if (!string.IsNullOrWhiteSpace(newName)) pizzaToEdit.Name = newName;
+
+                    Console.Write($"Изменить основу? Текущая: {pizzaToEdit.Base.Name} (да/нет): ");
+                    if (Console.ReadLine()?.ToLower() == "да")
+                    {
+                        for (int i = 0; i < bases.Count; i++) Console.WriteLine($"{i + 1}. {bases[i].Name}");
+                        Console.Write("Выберите новую основу (номер): ");
+                        if (int.TryParse(Console.ReadLine(), out int bIdx) && bIdx > 0 && bIdx <= bases.Count)
+                        {
+                            pizzaToEdit.Base = bases[bIdx - 1];
+                        }
+                    }
+
+                    Console.Write("Очистить текущие ингредиенты и собрать их заново? (да/нет): ");
+                    if (Console.ReadLine()?.ToLower() == "да")
+                    {
+                        pizzaToEdit.Ingredients.Clear();
+                        Console.WriteLine("\nДобавляем ингредиенты (введите 0 для завершения):");
+                        while (true)
+                        {
+                            for (int i = 0; i < ingredients.Count; i++) Console.WriteLine($"{i + 1}. {ingredients[i].Name}");
+                            Console.Write("Выбор: ");
+
+                            if (!int.TryParse(Console.ReadLine(), out int ingIdx)) continue;
+                            if (ingIdx == 0) break;
+
+                            if (ingIdx > 0 && ingIdx <= ingredients.Count)
+                            {
+                                pizzaToEdit.AddIngredient(ingredients[ingIdx - 1]);
+                                Console.WriteLine("Добавлено!");
+                            }
+                        }
+                    }
+                    Console.WriteLine("Пицца успешно обновлена!");
+                }
+            }
             else if (act == "D")
             {
                 Console.Write("Введите номер для удаления: ");
                 if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= pizzas.Count)
                 {
-                    pizzas.RemoveAt(idx - 1);
+                    var pizzaToRemove = sortedPizzas[idx - 1];
+                    pizzas.Remove(pizzaToRemove);
                     Console.WriteLine("Удалено!");
                 }
             }
-           else if (act == "F")
+            else if (act == "F")
             {
                 Console.Write("\nВведите название ингредиента для поиска (например, Томаты): ");
                 string search = Console.ReadLine()?.Trim().ToLower() ?? "";
