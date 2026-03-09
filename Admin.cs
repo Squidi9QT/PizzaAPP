@@ -60,11 +60,11 @@ namespace KurbanChef
                     var ing = ingredients[idx - 1];
                     Console.Write($"Новое название ({ing.Name}): ");
                     string newName = Console.ReadLine()!;
-                    if (!string.IsNullOrWhiteSpace(newName)) ing.Name = newName;
+                    if (!string.IsNullOrWhiteSpace(newName)) ing.Rename(newName);
 
                     Console.Write($"Новая цена ({ing.Price}): ");
                     string newPrice = Console.ReadLine()!;
-                    if (decimal.TryParse(newPrice, out decimal p)) ing.Price = p;
+                    if (decimal.TryParse(newPrice, out decimal p)) ing.SetPrice(p);
                     Console.WriteLine("Обновлено!");
                 }
             }
@@ -132,7 +132,7 @@ namespace KurbanChef
                     var b = bases[idx - 1];
                     Console.Write($"Новое название ({b.Name}): ");
                     string nName = Console.ReadLine()!;
-                    if (!string.IsNullOrWhiteSpace(nName)) b.Name = nName;
+                    if (!string.IsNullOrWhiteSpace(nName)) b.Rename(nName);
 
                     Console.Write($"Новая цена ({b.Price}): ");
                     if (decimal.TryParse(Console.ReadLine(), out decimal nPrice))
@@ -140,7 +140,7 @@ namespace KurbanChef
                         if (!b.IsClassic && classicPrice > 0 && nPrice > classicPrice * 1.2m)
                             Console.WriteLine($"ОШИБКА! Максимальная цена для особой основы: {classicPrice * 1.2m}");
                         else
-                            b.Price = nPrice;
+                            b.SetPrice(nPrice);
                     }
                     Console.WriteLine("Обновлено!");
                 }
@@ -280,7 +280,7 @@ namespace KurbanChef
             else if (act == "D")
             {
                 Console.Write("Введите номер для удаления: ");
-                if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= pizzas.Count)
+                if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= sortedPizzas.Count)
                 {
                     var pizzaToRemove = sortedPizzas[idx - 1];
                     pizzas.Remove(pizzaToRemove);

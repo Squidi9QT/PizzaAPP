@@ -5,7 +5,7 @@ namespace KurbanChef
 
         public Ingredient (string name, decimal price) : base(name)
         {
-            Price = price;
+            SetPrice(price);
         }
     }
 }

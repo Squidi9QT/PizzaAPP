@@ -10,12 +10,12 @@ namespace KurbanChef
 
             if (!isClassic && classicPrice > 0 && price > classicPrice * 1.2m)
             {
-                Price = classicPrice * 1.2m;
+                SetPrice(classicPrice * 1.2m);
                 Console.WriteLine($"Внимание: цена '{name}' была снижена до {Price}");
             }
             else
             {
-                Price = price;
+                SetPrice(price);
             }
         }
     }
