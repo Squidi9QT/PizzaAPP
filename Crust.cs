@@ -13,7 +13,7 @@ namespace KurbanChef
 
         public bool CanUseWith (string pizzaName) {
             if(string.IsNullOrWhiteSpace(pizzaName)) return false;
-            string normalised = pizzaName.Replace("(Двойная)","").Trim();
+            string normalised = pizzaName.Replace(" (Двойная)","").Trim();
 
             if(AllowedPizzas.Count>0)
                 return AllowedPizzas.Contains(normalised);
@@ -24,7 +24,7 @@ namespace KurbanChef
         public bool CanUseWith(string pizzaName1, string pizzaName2)
         {
             return CanUseWith(pizzaName1) && CanUseWith(pizzaName2);
-        }   
+        }
 
         public Crust(string name)
         {

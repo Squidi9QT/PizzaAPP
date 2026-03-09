@@ -259,9 +259,15 @@ namespace KurbanChef
             Console.WriteLine("=== СБОРКА ПИЦЦЫ 50/50 ===");
             for (int i = 0; i < menu.Count; i++) Console.WriteLine($"{i + 1}. {menu[i].Name}");
 
-            Console.Write("\nПервая половина (номер): "); int p1 = int.Parse(Console.ReadLine()!) - 1;
-            Console.Write("Вторая половина (номер): "); int p2 = int.Parse(Console.ReadLine()!) - 1;
-            Console.Write("Основа (1-Классика, 2-Тонкое, 3-Толстое): "); int bIdx = int.Parse(Console.ReadLine()!) - 1;
+            Console.Write("\nПервая половина (номер): ");
+                if (!int.TryParse(Console.ReadLine(), out int p1) || p1 < 1 || p1 > menu.Count)
+                return; p1--;
+            Console.Write("Вторая половина (номер): ");
+                if (!int.TryParse(Console.ReadLine(), out int p2) || p2 < 1 || p2 > menu.Count)
+                return; p2--;
+            Console.Write("Основа (1-Классика, 2-Тонкое, 3-Толстое): ");
+            if (!int.TryParse(Console.ReadLine(), out int bIdx) || bIdx < 1 || bIdx > bases.Count) return;
+            bIdx--;
 
             Pizza combo = new Pizza($"50/50: {menu[p1].Name} / {menu[p2].Name}", bases[bIdx]);
 

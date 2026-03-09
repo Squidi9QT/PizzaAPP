@@ -26,6 +26,8 @@ namespace KurbanChef
 
             Crust sesameCrust = new Crust("Кунжутные бортики");
             sesameCrust.AddIngredient(ingredients[5]);
+            sesameCrust.AllowedPizzas.Add("Пепперони");
+            sesameCrust.AllowedPizzas.Add("Мясная");
             crusts.Add(sesameCrust);
 
 
