@@ -365,13 +365,17 @@ namespace KurbanChef
 
             Console.Clear();
             Console.WriteLine("=== СПИСОК ЗАКАЗОВ ===");
-            if (!filteredOrders.Any())
+
+            var list = filteredOrders.ToList();
+            list.Sort(new OrderTimeComparer());
+
+            if (!list.Any())
             {
                 Console.WriteLine("\nЗаказы по вашему запросу не найдены.");
             }
             else
             {
-                foreach (var order in filteredOrders)
+                foreach (var order in list)
                 {
                     Console.WriteLine($"\nЗаказ #{order.OrderNumber} | ID: {order.Id}");
                     Console.WriteLine($"Оформлен на: {order.OrderTime}");

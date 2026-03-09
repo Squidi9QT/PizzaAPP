@@ -15,7 +15,10 @@ namespace KurbanChef
         public virtual decimal Price { get; private set; }
         protected BaseProduct(string name)
         {
-            Rename(name);
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Имя не может быть пустым", nameof(name));
+
+            Name = name.Trim();
         }
 
         public void Rename(string name)

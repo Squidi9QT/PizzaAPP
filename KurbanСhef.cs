@@ -90,7 +90,7 @@ namespace KurbanChef
                 Console.WriteLine("0. Без бортика");
                 for (int j = 0; j < crusts.Count; j++)
                 {
-                    if (crusts[j].ForbiddenPizzas.Contains(selected.Name))
+                    if (!crusts[j].CanUseWith(selected.Name))
                         Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тенге) - НЕДОСТУПНО");
                     else
                         Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тенге)");
@@ -100,7 +100,7 @@ namespace KurbanChef
                 if (int.TryParse(Console.ReadLine(), out int cChoice) && cChoice > 0 && cChoice <= crusts.Count)
                 {
                     var chosenCrust = crusts[cChoice - 1];
-                    if (!chosenCrust.ForbiddenPizzas.Contains(selected.Name.Replace(" (Двойная)", "")))
+                    if (chosenCrust.CanUseWith(selected.Name))
                     {
                         selected.SelectedCrust = chosenCrust;
                     }

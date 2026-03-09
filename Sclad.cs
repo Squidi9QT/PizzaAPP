@@ -17,18 +17,17 @@ namespace KurbanChef
             ingredients.Add(new Ingredient("Ветчина(Халал)", 1200));
             ingredients.Add(new Ingredient("Томаты", 300));
             ingredients.Add(new Ingredient("Кунжут", 200));
-            ingredients.Add(new Ingredient("Какашка(От Ромы Сандаля)", 1488));
+
+            sesameCrust.AllowedPizzas.Add("Пепперони");
+            sesameCrust.AllowedPizzas.Add("Маргарита");
 
             Crust cheeseCrust = new Crust("Сырные бортики");
             cheeseCrust.AddIngredient(ingredients[0]);
-
-            cheeseCrust.ForbiddenPizzas.Add("Маргарита");
             crusts.Add(cheeseCrust);
 
             Crust sesameCrust = new Crust("Кунжутные бортики");
             sesameCrust.AddIngredient(ingredients[5]);
             crusts.Add(sesameCrust);
-
 
             Pizza pepperoni = new Pizza("Пепперони", bases[1]);
             pepperoni.AddIngredient(ingredients[0]);
