@@ -74,7 +74,7 @@ namespace KurbanChef
                 Pizza selected = new Pizza(originalPizza.Name, originalPizza.Base);
                 selected.Ingredients = new List<Ingredient>(originalPizza.Ingredients);
 
-                Console.WriteLine($"\nВыберите размер: 1.Маленькая(база) 2.Средняя(+20%) 3.Большая(+50%)");
+                Console.WriteLine($"\nВыберите размер: 1.Маленькая({originalPizza.TotalPrice} тг) 2.Средняя(+20%) 3.Большая(+50%)");
                 string sChoice = Console.ReadLine()!;
                 selected.Size = sChoice == "2" ? PizzaSize.Medium : (sChoice == "3" ? PizzaSize.Large : PizzaSize.Small);
 
@@ -157,7 +157,7 @@ namespace KurbanChef
                     customPizza.AddIngredient(ingredients[ingIdx - 1]);
             }
 
-            Console.WriteLine("\nРазмер: 1.Small 2.Medium(+20%) 3.Large(+50%)");
+            Console.WriteLine($"\nВыберите размер: 1.Маленькая ({customPizza.TotalPrice} тг) 2.Средняя 3.Большая");
             string sz = Console.ReadLine()!;
             customPizza.Size = sz == "2" ? PizzaSize.Medium : (sz == "3" ? PizzaSize.Large : PizzaSize.Small);
 
@@ -230,9 +230,16 @@ namespace KurbanChef
 
                         if (DateTime.TryParse(dateInput, out DateTime dt))
                         {
+                        if (dt < DateTime.Now)
+                        {
+                            Console.WriteLine("Я пока не умею путешествовать во времени :()");
+                        }
+                        else
+                        {
                             currentOrder.OrderTime = dt;
                             Console.WriteLine("Время заказа успешно установлено на: " + dt.ToString("g"));
                             validDate = true;
+                        }
                         }
                         else
                         {

@@ -371,7 +371,6 @@ namespace KurbanChef
             Console.WriteLine("\nНажмите любую клавишу для возврата...");
             Console.ReadKey();
         }
-
         private static void ManageCrusts(List<Crust> crusts, List<Ingredient> ingredients, List<Pizza> pizzas)
         {
            while (true)
