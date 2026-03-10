@@ -6,7 +6,7 @@ namespace KurbanChef
 {
     public static class Admin
     {
-        public static void ShowAdminMenu(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas, List<Order> orders)
+        public static void ShowAdminMenu(List<Ingredient> ingredients, List<PizzaBase> bases, List<Pizza> pizzas, List<Order> orders,List<Crust> crusts)
         {
             while (true)
             {
@@ -29,6 +29,7 @@ namespace KurbanChef
                     case "2": ManageBases(bases); break;
                     case "3": ManagePizzas(pizzas, bases, ingredients); break;
                     case "4": ManageOrders(orders); break;
+                    case "5": ManageCrusts(crusts,ingredients,pizzas); break;
                 }
             }
         }
@@ -289,25 +290,7 @@ namespace KurbanChef
             }
             else if (act == "F")
             {
-                Console.Write("\nВведите название ингредиента для поиска (например, Томаты): ");
-                string search = Console.ReadLine()?.Trim().ToLower() ?? "";
-
-                //  TODO LINQ для поиска пиц с ингр
-                var filtered = pizzas.Where(p => p.Ingredients.Any(ing => ing.Name.ToLower().Contains(search))).ToList();
-
-                Console.WriteLine($"\n--- Результаты поиска для '{search}' ---");
-                if (filtered.Count == 0)
-                {
-                    Console.WriteLine("Пиццы с таким ингредиентом не найдены.");
-                }
-                else
-                {
-                    foreach (var p in filtered)
-                    {
-                        string composition = string.Join(", ", p.Ingredients.Select(x => x.Name));
-                        Console.WriteLine($"- {p.Name} | Состав: {composition}");
-                    }
-                }
+                FilterPizzasByIngredient(pizzas);
             }
 
             if (act != "0") Console.ReadKey();
@@ -387,6 +370,69 @@ namespace KurbanChef
             }
             Console.WriteLine("\nНажмите любую клавишу для возврата...");
             Console.ReadKey();
+        }
+
+        private static void ManageCrusts(List<Crust> crusts, List<Ingredient> ingredients, List<Pizza> pizzas)
+        {
+           while (true)
+            {
+                 Console.Clear();
+            Console.WriteLine ("СПИСОК БОРТИКОВ");
+            for (int i = 0; i < crusts.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {crusts[i].Name} | Цена: {crusts[i].Price} тг.");
+            }
+            Console.WriteLine("\n[A] Добавить | [D] Удалить | [0] Назад");
+            string act = Console.ReadLine()?.ToUpper()!;
+
+            if (act == "A")
+            {
+                Console.Write("Название бортика: ");
+                string name = Console.ReadLine()!;
+                Crust newCrust = new Crust(name);
+
+                Console.WriteLine("Выберите ингредиенты для бортика (0 для конца):");
+                while (true)
+                {
+                    for (int i = 0; i < ingredients.Count; i++)
+                        Console.WriteLine($"{i + 1}. {ingredients[i].Name}");
+
+                    if (int.TryParse(Console.ReadLine(), out int ingIdx) && ingIdx > 0 && ingIdx <= ingredients.Count)
+                        newCrust.AddIngredient(ingredients[ingIdx - 1]);
+                    else break;
+                }
+
+                Console.WriteLine("Настроить ограничения? (1 - Разрешить только для..., 2 - Запретить для..., 0 - Пропустить)");
+                string limitChoice = Console.ReadLine()!;
+                if (limitChoice == "1" || limitChoice == "2")
+                {
+                    Console.WriteLine("Выберите пиццы из меню (0 для конца):");
+                    for (int i = 0; i < pizzas.Count; i++) Console.WriteLine($"{i + 1}. {pizzas[i].Name}");
+
+                    while (true)
+                    {
+                        if (int.TryParse(Console.ReadLine(), out int pIdx) && pIdx > 0 && pIdx <= pizzas.Count)
+                        {
+                            if (limitChoice == "1") newCrust.AllowedPizzas.Add(pizzas[pIdx - 1].Name);
+                            else newCrust.ForbiddenPizzas.Add(pizzas[pIdx - 1].Name);
+                        }
+                        else break;
+                    }
+                }
+                crusts.Add(newCrust);
+            }
+            if (act == "D")
+            {
+                Console.Write("Введите номер для удаления: ");
+                if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= crusts.Count)
+                {
+                    crusts.RemoveAt(idx - 1);
+                    Console.WriteLine("Удалено!");
+                }
+
+                if (act != "0") Console.ReadKey();
+            }
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ namespace KurbanChef
                         currentOrder = new Order(nextOrderNumber);
                     }
                 }
-                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas, allOrders); }
+                else if (choice == "0") { Admin.ShowAdminMenu(allIngredients, allBases, allPizzas, allOrders, allCrusts); }
                 else if (choice == "5") break;
             }
         }
@@ -266,21 +266,47 @@ namespace KurbanChef
                 if (!int.TryParse(Console.ReadLine(), out int p2) || p2 < 1 || p2 > menu.Count)
                 return; p2--;
             Console.Write("Основа (1-Классика, 2-Тонкое, 3-Толстое): ");
-            if (!int.TryParse(Console.ReadLine(), out int bIdx) || bIdx < 1 || bIdx > bases.Count) return;
-            bIdx--;
+                if (!int.TryParse(Console.ReadLine(), out int bIdx) || bIdx < 1 || bIdx > bases.Count) return;
+                bIdx--;
 
             Pizza combo = new Pizza($"50/50: {menu[p1].Name} / {menu[p2].Name}", bases[bIdx]);
 
             menu[p1].Ingredients.ForEach(i => combo.AddIngredient(new Ingredient(i.Name + " 1/2", i.Price / 2m)));
             menu[p2].Ingredients.ForEach(i => combo.AddIngredient(new Ingredient(i.Name + " 1/2", i.Price / 2m)));
 
-            Console.Write("Размер (1-S, 2-M, 3-L): "); string sz = Console.ReadLine()!;
+            Console.Write("Размер (1-S, 2-M, 3-L): ");
+            string sz = Console.ReadLine()!;
             combo.Size = sz == "2" ? PizzaSize.Medium : (sz == "3" ? PizzaSize.Large : PizzaSize.Small);
 
-            Console.Write("Бортик (1-Сырный, 2-Кунжут, 0-Без): ");
-            int.TryParse(Console.ReadLine(), out int cChoice);
-            combo.SelectedCrust = cChoice > 0 ? crusts[cChoice - 1] : null;
+            Console.WriteLine("\nВыберите бортик:");
+            Console.WriteLine("0. Без бортика");
+            for (int j = 0; j < crusts.Count; j++)
+            {
+                bool canUse = crusts[j].CanUseWith(menu[p1].Name,menu[p2].Name);
 
+                if (canUse)
+                    Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тг)");
+                else
+                    Console.WriteLine($"{j + 1}. {crusts[j].Name} (+{crusts[j].Price} тг)- [НЕ СОВМЕСТИМО]");
+            }
+            Console.Write("Ваш выбор: ");
+            if (int.TryParse(Console.ReadLine(), out int cChoice) && cChoice > 0 && cChoice <= crusts.Count)
+            {
+                var selectedCrust = crusts[cChoice - 1];
+                if (selectedCrust.CanUseWith(menu[p1].Name, menu[p2].Name))
+                {
+                    combo.SelectedCrust = selectedCrust;
+                }
+                else
+                {
+                    Console.WriteLine("\nОШИБКА: Этот бортик нельзя использовать с этими пиццами!");
+                    combo.SelectedCrust = null;
+                }
+            }
+            else
+            {
+                combo.SelectedCrust = null;
+            }
             currentOrder.AddPizza(combo);
             Console.WriteLine($"Готово! Итог: {combo.TotalPrice} тг. Нажмите любую кнопку...");
             Console.ReadKey();
