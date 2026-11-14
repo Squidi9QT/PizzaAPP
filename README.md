@@ -14,10 +14,11 @@ dotnet run
 
 | Файл | Что там |
 |---|---|
-| `Interfaces.cs` | интерфейс `IPriceable` для всего, у чего есть цена |
-| `PizzaBase.cs`, `Crust.cs`, `Ingredient.cs` | основа, корж и ингредиенты, общий предок `BaseProduct` |
+| `Interfaces.cs` | интерфейс `IPriceable` для всего, у чего есть цена, и общий предок `BaseProduct` |
+| `PizzaBase.cs`, `Ingredient.cs` | основа и ингредиенты, наследуются от `BaseProduct` |
+| `Crust.cs` | корж |
 | `Pizza.cs` | пицца и её размер `PizzaSize` |
 | `Order.cs`, `OrderTimeComparer.cs` | заказ и сортировка заказов по времени |
-| `Sclad.cs` | склад |
-| `Admin.cs` | действия администратора |
-| `KurbanСhef.cs` | точка входа, консольное меню |
+| `Sclad.cs` | стартовые данные: ингредиенты, основы и пиццы |
+| `Admin.cs` | меню администратора |
+| `KurbanСhef.cs` | точка входа (`Main`), консольное меню |
